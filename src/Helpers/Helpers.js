@@ -13,3 +13,13 @@ export const ApiFetch = (Adress, Method, Body, Callback) => {
       console.log(FetchError);
     });
 };
+
+export const GenerateTabKey = (TabID, OpenTabs) => {
+  let TabCount = 0;
+  OpenTabs.forEach((Tab) => {
+    if (Tab.id == TabID) {
+      TabCount = TabCount + 1;
+    }
+  });
+  return `${TabID}${TabCount}`;
+};

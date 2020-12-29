@@ -1,14 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import{ApiFetch} from "../Helpers/Helpers"
+import { ApiFetch } from '../Helpers/Helpers';
 import { Layout, Button, Tabs, ConfigProvider } from 'antd';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import { observer, Provider } from 'mobx-react';
 import GlobalStore from '../Store/GlobalStore';
 const { Header, Sider, Content } = Layout;
 const { TabPane } = Tabs;
-import "antd/dist/antd.css";
-
+import 'antd/dist/antd.css';
 
 @observer
 export default class App extends React.Component {
@@ -17,10 +16,9 @@ export default class App extends React.Component {
     this.state = {};
   }
   componentDidMount() {
-    ApiFetch("/api","post",{func:"getUserData"},(Response)=>{
-  GlobalStore.SetNewMenu(Response.menu)
-    })
-
+    ApiFetch('/api', 'post', { func: 'getUserData' }, (Response) => {
+      GlobalStore.SetNewTopMenu(Response.menu);
+    });
   }
   render() {
     return (
@@ -31,10 +29,34 @@ export default class App extends React.Component {
             <Layout>
               <Sider theme="light"></Sider>
               <Content>
-              { GlobalStore.Menu.map((TopButton)=>{
-                  return <Button key={TopButton.id}>{TopButton.caption}</Button>
+                {GlobalStore.TopMenu.map((TopButton) => {
+                  return (
+                    <Button
+                      onClick={() => {
+                        GlobalStore.AddTab(TopButton);
+                      }}
+                      key={TopButton.id}
+                    >
+                      {TopButton.caption}
+                    </Button>
+                  );
                 })}
-                <Tabs></Tabs>
+                <Tabs
+                  hideAdd={true}
+                  type="editable-card"
+                  onChange={(TabKey) => {
+                    GlobalStore.SetNewCurrentTab(TabKey);
+                  }}
+                  onEdit={(TabKey, Action) => {
+                    if (Action == 'remove') {
+                      GlobalStore.DeleteTab(TabKey);
+                    }
+                  }}
+                >
+                  {GlobalStore.OpenTabs.map((Tab) => {
+                    return <TabPane tab={Tab.caption} key={Tab.key}></TabPane>;
+                  })}
+                </Tabs>
               </Content>
             </Layout>
           </Layout>

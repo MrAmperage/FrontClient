@@ -1,4 +1,7 @@
 module.exports = {
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
   mode: 'production',
   entry: './src/Components/App.jsx',
   output: {
