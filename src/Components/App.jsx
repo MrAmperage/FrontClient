@@ -1,13 +1,22 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ApiFetch } from '../Helpers/Helpers';
-import { Layout, Button, Tabs, ConfigProvider } from 'antd';
+import { Layout, Button, Tabs, ConfigProvider, Spin } from 'antd';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import { observer, Provider } from 'mobx-react';
 import GlobalStore from '../Store/GlobalStore';
 const { Header, Sider, Content } = Layout;
 const { TabPane } = Tabs;
 import 'antd/dist/antd.css';
+
+const AppComponents = {
+  LeftMenuComponent: React.lazy(() => import('./LeftMenuComponent')),
+  map: React.lazy(() => import('./MapComponent')),
+  reports: React.lazy(() => import('./ReportComponent')),
+  equipment: React.lazy(() => import('./EquipmentComponent')),
+  exports: React.lazy(() => import('./ExportsComponent')),
+  actions: React.lazy(() => import('./ActionsComponent')),
+};
 
 @observer
 export default class App extends React.Component {
@@ -27,7 +36,16 @@ export default class App extends React.Component {
           <Layout style={{ height: '100vh', width: '100vw' }}>
             <Header></Header>
             <Layout>
-              <Sider theme="light"></Sider>
+              <Sider theme="light">
+                <React.Suspense
+                  fallback={<Spin tip="Загрузка компонента" size="large" />}
+                >
+                  {GlobalStore.CurrentTab != null &&
+                  'items' in GlobalStore.CurrentTab
+                    ? React.createElement(AppComponents.LeftMenuComponent)
+                    : null}
+                </React.Suspense>
+              </Sider>
               <Content>
                 {GlobalStore.TopMenu.map((TopButton) => {
                   return (
@@ -54,7 +72,19 @@ export default class App extends React.Component {
                   }}
                 >
                   {GlobalStore.OpenTabs.map((Tab) => {
-                    return <TabPane tab={Tab.caption} key={Tab.key}></TabPane>;
+                    return (
+                      <TabPane tab={Tab.caption} key={Tab.key}>
+                        <React.Suspense
+                          fallback={
+                            <Spin tip="Загрузка компонента" size="large" />
+                          }
+                        >
+                          {React.createElement(
+                            AppComponents[GlobalStore.CurrentTab.id]
+                          )}
+                        </React.Suspense>
+                      </TabPane>
+                    );
                   })}
                 </Tabs>
               </Content>

@@ -47,9 +47,18 @@ class Store {
   }
   AddTab(Tab) {
     let NewTab = { ...Tab };
+    NewTab.key = GenerateTabKey(Tab.id, this.OpenTabs);
+    if ('items' in NewTab) {
+      NewTab.CurrentMenuItem = NewTab.items[0].id;
+    }
     switch (NewTab.id) {
-      default:
-        NewTab.key = GenerateTabKey(NewTab.id, this.OpenTabs);
+      case 'reports':
+        break;
+      case 'equipment':
+        break;
+      case 'exports':
+        break;
+      case 'actions':
         break;
     }
 
