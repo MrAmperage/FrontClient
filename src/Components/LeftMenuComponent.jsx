@@ -12,7 +12,7 @@ export default class LeftMenuComponent extends React.Component {
 
   render() {
     return (
-      <Menu>
+      <Menu selectedKeys={this.props.ProviderStore.CurrentTab.CurrentMenuItem}>
         {this.props.ProviderStore.CurrentTab.items.map((MenuItem) => {
           return <Menu.Item key={MenuItem.id}>{MenuItem.caption}</Menu.Item>;
         })}

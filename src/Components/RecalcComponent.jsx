@@ -3,13 +3,13 @@ import { observer, inject } from 'mobx-react';
 
 @inject('ProviderStore')
 @observer
-export default class ReportComponent extends React.Component {
+export default class RecalcComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
   componentDidMount() {}
   render() {
-    return <div>Компонент отчетов.</div>;
+    return <div>Компонент пересчета действий</div>;
   }
 }

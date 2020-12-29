@@ -12,10 +12,10 @@ import 'antd/dist/antd.css';
 const AppComponents = {
   LeftMenuComponent: React.lazy(() => import('./LeftMenuComponent')),
   map: React.lazy(() => import('./MapComponent')),
-  reports: React.lazy(() => import('./ReportComponent')),
-  equipment: React.lazy(() => import('./EquipmentComponent')),
-  exports: React.lazy(() => import('./ExportsComponent')),
-  actions: React.lazy(() => import('./ActionsComponent')),
+  tripsReport: React.lazy(() => import('./TripsReportComponent')),
+  tyrespressReport: React.lazy(() => import('./TyrespressReportComponent')),
+  tripsExtended: React.lazy(() => import('./TripsExtendedComponent')),
+  recalc: React.lazy(() => import('./RecalcComponent')),
 };
 
 @observer
@@ -80,7 +80,11 @@ export default class App extends React.Component {
                           }
                         >
                           {React.createElement(
-                            AppComponents[GlobalStore.CurrentTab.id]
+                            'items' in GlobalStore.CurrentTab
+                              ? AppComponents[
+                                  GlobalStore.CurrentTab.CurrentMenuItem
+                                ]
+                              : AppComponents[GlobalStore.CurrentTab.id]
                           )}
                         </React.Suspense>
                       </TabPane>
