@@ -16,6 +16,7 @@ const AppComponents = {
   tyrespressReport: React.lazy(() => import('./TyrespressReportComponent')),
   tripsExtended: React.lazy(() => import('./TripsExtendedComponent')),
   recalc: React.lazy(() => import('./RecalcComponent')),
+  vehicles: React.lazy(() => import('./VehiclesComponent')),
 };
 
 @observer
