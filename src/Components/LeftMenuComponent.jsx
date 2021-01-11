@@ -14,7 +14,18 @@ export default class LeftMenuComponent extends React.Component {
     return (
       <Menu selectedKeys={this.props.ProviderStore.CurrentTab.CurrentMenuItem}>
         {this.props.ProviderStore.CurrentTab.items.map((MenuItem) => {
-          return <Menu.Item key={MenuItem.id}>{MenuItem.caption}</Menu.Item>;
+          return (
+            <Menu.Item
+              key={MenuItem.id}
+              onClick={(MenuItemInfo) => {
+                this.props.ProviderStore.SetNewCurrentMenuItemKey(
+                  MenuItemInfo.key
+                );
+              }}
+            >
+              {MenuItem.caption}
+            </Menu.Item>
+          );
         })}
       </Menu>
     );

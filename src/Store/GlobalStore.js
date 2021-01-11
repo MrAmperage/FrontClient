@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, autorun } from 'mobx';
 import { GenerateTabKey } from '../Helpers/Helpers';
 class Store {
   TopMenu = [];
@@ -6,6 +6,7 @@ class Store {
   CurrentTab = null;
   constructor() {
     makeObservable(this, {
+      SetNewCurrentMenuItemKey: action,
       TopMenu: observable,
       OpenTabs: observable,
       CurrentTab: observable,
@@ -15,6 +16,10 @@ class Store {
       DeleteTab: action,
     });
   }
+  SetNewCurrentMenuItemKey(NewMenuItemKey) {
+    this.CurrentTab.CurrentMenuItem = NewMenuItemKey;
+  }
+
   SetNewCurrentTab(NewCurrentTabKey) {
     this.CurrentTab = this.OpenTabs.find((Tab) => {
       if (Tab.key == NewCurrentTabKey) {

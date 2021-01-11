@@ -5,7 +5,7 @@ import { ApiFetch } from '../Helpers/Helpers';
 
 @inject('ProviderStore')
 @observer
-export default class VehiclesComponent extends React.Component {
+export default class AdministrationComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,11 +25,15 @@ export default class VehiclesComponent extends React.Component {
     });
   }
 
-  RequestTransportTable() {
+  RequestAdministrationTable() {
     ApiFetch(
       '/api',
       'post',
-      { category: 'vehicles', opts: {}, func: 'getObjectsList' },
+      {
+        category: this.props.ProviderStore.CurrentTab.CurrentMenuItem,
+        opts: {},
+        func: 'getObjectsList',
+      },
       (TableIDResponse) => {
         ApiFetch(
           '/api',
@@ -46,7 +50,7 @@ export default class VehiclesComponent extends React.Component {
     );
   }
   componentDidMount() {
-    this.RequestTransportTable();
+    this.RequestAdministrationTable();
   }
   render() {
     return (
