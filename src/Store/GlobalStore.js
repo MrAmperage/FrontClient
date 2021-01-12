@@ -1,5 +1,13 @@
-import { makeObservable, observable, action, autorun } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 import { GenerateTabKey } from '../Helpers/Helpers';
+import XYZ from 'ol/source/XYZ';
+import { defaults } from 'ol/interaction';
+import View from 'ol/View';
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import MapObject from 'ol/Map';
+import VectorSource from 'ol/source/Vector';
+import Control from 'ol/control/Control';
+
 class Store {
   TopMenu = [];
   OpenTabs = [];
@@ -57,6 +65,30 @@ class Store {
       NewTab.CurrentMenuItem = NewTab.items[0].id;
     }
     switch (NewTab.id) {
+      case 'map':
+        const VectorSourceLink = new VectorSource();
+        NewTab.Options = {
+          MapVectorSourceLink: VectorSourceLink,
+          MapObject: new MapObject({
+            interactions: defaults({ doubleClickZoom: false }),
+            layers: [
+              new TileLayer({
+                preload: Infinity,
+                source: new XYZ({
+                  url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                }),
+              }),
+              new VectorLayer({
+                source: VectorSourceLink,
+              }),
+            ],
+            view: new View({
+              center: [9699920.994474, 7124384.881034],
+              zoom: 13,
+            }),
+          }),
+        };
+        break;
       case 'reports':
         break;
       case 'equipment':

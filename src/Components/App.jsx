@@ -8,6 +8,7 @@ import GlobalStore from '../Store/GlobalStore';
 const { Header, Sider, Content } = Layout;
 const { TabPane } = Tabs;
 import 'antd/dist/antd.css';
+import '../CSS/AppComponent.css';
 
 const AppComponents = {
   LeftMenuComponent: React.lazy(() => import('./LeftMenuComponent')),
@@ -37,7 +38,7 @@ export default class App extends React.Component {
     return (
       <Provider ProviderStore={GlobalStore}>
         <ConfigProvider locale={ru_RU}>
-          <Layout style={{ height: '100vh', width: '100vw' }}>
+          <Layout className="FullExtend">
             <Header></Header>
             <Layout>
               <Sider theme="light">
@@ -64,6 +65,7 @@ export default class App extends React.Component {
                   );
                 })}
                 <Tabs
+                  style={{ height: 'calc(100% - 4%)', with: '100%' }}
                   hideAdd={true}
                   type="editable-card"
                   onChange={(TabKey) => {
@@ -77,7 +79,11 @@ export default class App extends React.Component {
                 >
                   {GlobalStore.OpenTabs.map((Tab) => {
                     return (
-                      <TabPane tab={Tab.caption} key={Tab.key}>
+                      <TabPane
+                        tab={Tab.caption}
+                        key={Tab.key}
+                        className="FullExtend"
+                      >
                         <React.Suspense
                           fallback={
                             <Spin tip="Загрузка компонента" size="large" />
