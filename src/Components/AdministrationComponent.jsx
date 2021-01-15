@@ -30,7 +30,8 @@ export default class AdministrationComponent extends React.Component {
       '/api',
       'post',
       {
-        category: this.props.ProviderStore.CurrentTab.CurrentMenuItem,
+        category: this.props.ProviderStore.CurrentTab.Options.CurrentMenuItem
+          .id,
         opts: {},
         func: 'getObjectsList',
       },
