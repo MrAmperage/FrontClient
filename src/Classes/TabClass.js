@@ -1,3 +1,7 @@
+import MapObject from 'ol/Map';
+import OSM from 'ol/source/OSM';
+import { Tile as TileLayer } from 'ol/layer';
+import View from 'ol/View';
 export class Tab {
   constructor(TabObject, OpenTabs) {
     this.Id = TabObject.id;
@@ -7,11 +11,28 @@ export class Tab {
       this.Items = TabObject.items;
       this.Options = { CurrentMenuItem: TabObject.items[0] };
     }
+    switch (TabObject.id) {
+      case 'map':
+        this.Options = {
+          MapObject: new MapObject({
+            layers: [
+              new TileLayer({
+                source: new OSM(),
+              }),
+            ],
+            view: new View({
+              center: [9699920.994474, 7124384.881034],
+              zoom: 13,
+            }),
+          }),
+        };
+        break;
+    }
   }
   GenerateTabKey(TabID, OpenTabs) {
     let TabCount = 0;
     OpenTabs.forEach((Tab) => {
-      if (Tab.id == TabID) {
+      if (Tab.Id == TabID) {
         TabCount = TabCount + 1;
       }
     });
