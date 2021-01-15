@@ -46,7 +46,7 @@ export default class App extends React.Component {
                   fallback={<Spin tip="Загрузка компонента" size="large" />}
                 >
                   {GlobalStore.CurrentTab != null &&
-                  'items' in GlobalStore.CurrentTab
+                  'Items' in GlobalStore.CurrentTab
                     ? React.createElement(AppComponents.LeftMenuComponent)
                     : null}
                 </React.Suspense>
@@ -80,8 +80,8 @@ export default class App extends React.Component {
                   {GlobalStore.OpenTabs.map((Tab) => {
                     return (
                       <TabPane
-                        tab={Tab.caption}
-                        key={Tab.key}
+                        tab={Tab.Caption}
+                        key={Tab.Key}
                         className="FullExtend"
                       >
                         <React.Suspense
@@ -90,11 +90,12 @@ export default class App extends React.Component {
                           }
                         >
                           {React.createElement(
-                            'items' in GlobalStore.CurrentTab
+                            'Items' in GlobalStore.CurrentTab
                               ? AppComponents[
-                                  GlobalStore.CurrentTab.CurrentMenuItem
+                                  GlobalStore.CurrentTab.Options.CurrentMenuItem
+                                    .id
                                 ]
-                              : AppComponents[GlobalStore.CurrentTab.id]
+                              : AppComponents[GlobalStore.CurrentTab.Id]
                           )}
                         </React.Suspense>
                       </TabPane>

@@ -10,15 +10,6 @@ export default class MapComponent extends React.Component {
     this.MapRef = React.createRef();
   }
 
-  InitMap = () => {
-    this.props.ProviderStore.CurrentTab.Options.MapObject.setTarget(
-      this.MapRef.current
-    );
-  };
-
-  componentDidMount() {
-    this.InitMap();
-  }
   render() {
     return <div ref={this.MapRef} className="FullExtend" />;
   }
