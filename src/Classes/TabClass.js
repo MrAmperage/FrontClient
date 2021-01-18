@@ -1,6 +1,8 @@
 import MapObject from 'ol/Map';
 import OSM from 'ol/source/OSM';
 import { Tile as TileLayer } from 'ol/layer';
+import Control from 'ol/control/Control';
+import { defaults } from 'ol/interaction';
 import View from 'ol/View';
 export class Tab {
   constructor(TabObject, OpenTabs) {
@@ -13,8 +15,15 @@ export class Tab {
     }
     switch (TabObject.id) {
       case 'map':
+        let ButtonBar = document.createElement('div');
+        ButtonBar.id = `ButtonBar${this.Key}`;
+        ButtonBar.className = 'MatteGlass';
+
         this.Options = {
           MapObject: new MapObject({
+            interactions: defaults({ doubleClickZoom: false }),
+            controls: [new Control({ element: ButtonBar })],
+
             layers: [
               new TileLayer({
                 source: new OSM(),
