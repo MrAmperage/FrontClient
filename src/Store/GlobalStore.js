@@ -7,7 +7,7 @@ class Store {
   CurrentTab = null;
   constructor() {
     makeObservable(this, {
-      SetNewCurrentMenuItemKey: action,
+      SetNewCurrentMenuItem: action,
       TopMenu: observable,
       OpenTabs: observable,
       CurrentTab: observable,
@@ -17,8 +17,14 @@ class Store {
       DeleteTab: action,
     });
   }
-  SetNewCurrentMenuItemKey(NewMenuItemKey) {
-    this.CurrentTab.CurrentMenuItem = NewMenuItemKey;
+  SetNewCurrentMenuItem(NewMenuItemKey) {
+    this.CurrentTab.Options.CurrentMenuItem = this.CurrentTab.Items.find(
+      (Item) => {
+        if (Item.id == NewMenuItemKey) {
+          return true;
+        }
+      }
+    );
   }
 
   SetNewCurrentTab(NewCurrentTabKey) {

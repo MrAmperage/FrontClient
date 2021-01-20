@@ -22,7 +22,7 @@ export default class LeftMenuComponent extends React.Component {
             <Menu.Item
               key={MenuItem.id}
               onClick={(MenuItemInfo) => {
-                this.props.ProviderStore.SetNewCurrentMenuItemKey(
+                this.props.ProviderStore.SetNewCurrentMenuItem(
                   MenuItemInfo.key
                 );
               }}

@@ -12,7 +12,7 @@ export class Tab {
     this.Key = this.GenerateTabKey(TabObject.id, OpenTabs);
     if ('items' in TabObject) {
       this.Items = TabObject.items;
-      this.Options = { CurrentMenuItem: TabObject.items[0].id };
+      this.Options = { CurrentMenuItem: TabObject.items[0] };
     }
     switch (TabObject.id) {
       case 'map':
