@@ -1,5 +1,6 @@
 import MapObject from 'ol/Map';
 import OSM from 'ol/source/OSM';
+import * as React from 'react';
 import { Tile as TileLayer } from 'ol/layer';
 import Control from 'ol/control/Control';
 import { defaults } from 'ol/interaction';
@@ -11,10 +12,11 @@ export class Tab {
     this.Key = this.GenerateTabKey(TabObject.id, OpenTabs);
     if ('items' in TabObject) {
       this.Items = TabObject.items;
-      this.Options = { CurrentMenuItem: TabObject.items[0] };
+      this.Options = { CurrentMenuItem: TabObject.items[0].id };
     }
     switch (TabObject.id) {
       case 'map':
+        this.Component = React.lazy(() => import('../Components/MapComponent'));
         let ButtonBar = document.createElement('div');
         ButtonBar.id = `ButtonBar${this.Key}`;
         ButtonBar.className = 'MatteGlass';
@@ -35,6 +37,31 @@ export class Tab {
             }),
           }),
         };
+        break;
+      case 'settings':
+        this.Component = React.lazy(() =>
+          import('../Components/AdministrationComponent')
+        );
+        break;
+      case 'reports':
+        this.Component = React.lazy(() =>
+          import('../Components/TripsReportComponent')
+        );
+        break;
+      case 'equipment':
+        this.Component = React.lazy(() =>
+          import('../Components/TyrespressReportComponent')
+        );
+        break;
+      case 'exports':
+        this.Component = React.lazy(() =>
+          import('../Components/TripsExtendedComponent')
+        );
+        break;
+      case 'actions':
+        this.Component = React.lazy(() =>
+          import('../Components/RecalcComponent')
+        );
         break;
     }
   }

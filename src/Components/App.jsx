@@ -9,19 +9,7 @@ const { Header, Sider, Content } = Layout;
 const { TabPane } = Tabs;
 import 'antd/dist/antd.css';
 import '../CSS/AppComponent.css';
-
-const AppComponents = {
-  LeftMenuComponent: React.lazy(() => import('./LeftMenuComponent')),
-  map: React.lazy(() => import('./MapComponent')),
-  tripsReport: React.lazy(() => import('./TripsReportComponent')),
-  tyrespressReport: React.lazy(() => import('./TyrespressReportComponent')),
-  tripsExtended: React.lazy(() => import('./TripsExtendedComponent')),
-  recalc: React.lazy(() => import('./RecalcComponent')),
-  vehicles: React.lazy(() => import('./AdministrationComponent')),
-  groups: React.lazy(() => import('./AdministrationComponent')),
-  users: React.lazy(() => import('./AdministrationComponent')),
-  roles: React.lazy(() => import('./AdministrationComponent')),
-};
+const LeftMenuComponent = React.lazy(() => import('./LeftMenuComponent'));
 
 @observer
 export default class App extends React.Component {
@@ -46,9 +34,9 @@ export default class App extends React.Component {
                   fallback={<Spin tip="Загрузка компонента" size="large" />}
                 >
                   {GlobalStore.CurrentTab != null &&
-                  'Items' in GlobalStore.CurrentTab
-                    ? React.createElement(AppComponents.LeftMenuComponent)
-                    : null}
+                  'Items' in GlobalStore.CurrentTab ? (
+                    <LeftMenuComponent />
+                  ) : null}
                 </React.Suspense>
               </Sider>
               <Content>
@@ -89,14 +77,7 @@ export default class App extends React.Component {
                             <Spin tip="Загрузка компонента" size="large" />
                           }
                         >
-                          {React.createElement(
-                            'Items' in GlobalStore.CurrentTab
-                              ? AppComponents[
-                                  GlobalStore.CurrentTab.Options.CurrentMenuItem
-                                    .id
-                                ]
-                              : AppComponents[GlobalStore.CurrentTab.Id]
-                          )}
+                          {<Tab.Component />}
                         </React.Suspense>
                       </TabPane>
                     );
