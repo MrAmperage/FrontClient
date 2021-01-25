@@ -5,6 +5,8 @@ import { Tile as TileLayer } from 'ol/layer';
 import Control from 'ol/control/Control';
 import { defaults } from 'ol/interaction';
 import View from 'ol/View';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 export class Tab {
   constructor(TabObject, OpenTabs) {
     this.Id = TabObject.id;
@@ -16,18 +18,24 @@ export class Tab {
     }
     switch (TabObject.id) {
       case 'map':
+        const VectorSourceLink = new VectorSource();
         this.Component = React.lazy(() => import('../Components/MapComponent'));
         let ButtonBar = document.createElement('div');
         ButtonBar.id = `ButtonBar${this.Key}`;
         ButtonBar.className = 'MatteGlass';
 
         this.Options = {
+          MapVectorSourceLink: VectorSourceLink,
           MapObject: new MapObject({
             interactions: defaults({ doubleClickZoom: false }),
             controls: [new Control({ element: ButtonBar })],
 
             layers: [
+              new VectorLayer({
+                source: VectorSourceLink,
+              }),
               new TileLayer({
+                preload: Infinity,
                 source: new OSM(),
               }),
             ],
