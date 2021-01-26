@@ -1,12 +1,15 @@
 import MapObject from 'ol/Map';
 import OSM from 'ol/source/OSM';
 import * as React from 'react';
+import Stroke from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
 import { Tile as TileLayer } from 'ol/layer';
 import Control from 'ol/control/Control';
 import { defaults } from 'ol/interaction';
-import View from 'ol/View';
-import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
+import View from 'ol/View';
+
 export class Tab {
   constructor(TabObject, OpenTabs) {
     this.Id = TabObject.id;
@@ -18,25 +21,30 @@ export class Tab {
     }
     switch (TabObject.id) {
       case 'map':
-        const VectorSourceLink = new VectorSource();
         this.Component = React.lazy(() => import('../Components/MapComponent'));
         let ButtonBar = document.createElement('div');
         ButtonBar.id = `ButtonBar${this.Key}`;
         ButtonBar.className = 'MatteGlass';
 
         this.Options = {
-          MapVectorSourceLink: VectorSourceLink,
           MapObject: new MapObject({
             interactions: defaults({ doubleClickZoom: false }),
             controls: [new Control({ element: ButtonBar })],
 
             layers: [
-              new VectorLayer({
-                source: VectorSourceLink,
-              }),
               new TileLayer({
                 preload: Infinity,
                 source: new OSM(),
+              }),
+              new VectorLayer({
+                style: new Style({
+                  stroke: new Stroke({
+                    color: 'rgb(24, 144, 255)',
+                    lineDash: [10, 10],
+                    width: 3,
+                  }),
+                }),
+                source: new VectorSource(),
               }),
             ],
             view: new View({

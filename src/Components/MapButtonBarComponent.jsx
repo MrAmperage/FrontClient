@@ -30,8 +30,9 @@ export default class MapButtonBarComponent extends React.Component {
   CreateMapTooltip = (OverlayID) => {
     let RulerTooltipElement = document.createElement('div');
     RulerTooltipElement.id = `Ruler${
-      this.props.ProviderStore.CurrentTab.Options.MapVectorSourceLink.getFeatures()
-        .length
+      this.props.ProviderStore.CurrentTab.Options.MapObject.getLayers()
+        .array_[1].getSource()
+        .getFeatures().length
     }`;
 
     let OverlayTooltip = new Overlay({
@@ -52,12 +53,13 @@ export default class MapButtonBarComponent extends React.Component {
       8
     ) {
       let DrawObject = new Draw({
-        source: this.props.ProviderStore.CurrentTab.Options.MapVectorSourceLink,
+        source: this.props.ProviderStore.CurrentTab.Options.MapObject.getLayers().array_[1].getSource(),
         type: GeometryType.LINE_STRING,
         style: new Style({
           stroke: new Stroke({
             color: 'rgb(24, 144, 255)',
             lineDash: [10, 10],
+            width: 3,
           }),
         }),
       });
@@ -65,8 +67,9 @@ export default class MapButtonBarComponent extends React.Component {
 
       OverlayTooltip = this.CreateMapTooltip(
         `Ruler${
-          this.props.ProviderStore.CurrentTab.Options.MapVectorSourceLink.getFeatures()
-            .length
+          this.props.ProviderStore.CurrentTab.Options.MapObject.getLayers()
+            .array_[1].getSource()
+            .getFeatures().length
         }`
       );
 
@@ -81,8 +84,9 @@ export default class MapButtonBarComponent extends React.Component {
                 ProviderStore={this.props.ProviderStore}
                 Distance={this.FormatLength(MoveEvent.target)}
                 TooltipID={`Ruler${
-                  this.props.ProviderStore.CurrentTab.Options.MapVectorSourceLink.getFeatures()
-                    .length
+                  this.props.ProviderStore.CurrentTab.Options.MapObject.getLayers()
+                    .array_[1].getSource()
+                    .getFeatures().length
                 }`}
               />,
               OverlayTooltip.getElement()
@@ -95,8 +99,9 @@ export default class MapButtonBarComponent extends React.Component {
       DrawObject.on('drawend', (DrawEvent) => {
         DrawEvent.feature.setId(
           `Ruler${
-            this.props.ProviderStore.CurrentTab.Options.MapVectorSourceLink.getFeatures()
-              .length
+            this.props.ProviderStore.CurrentTab.Options.MapObject.getLayers()
+              .array_[1].getSource()
+              .getFeatures().length
           }`
         );
         this.props.ProviderStore.CurrentTab.Options.MapObject.removeInteraction(
