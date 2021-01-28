@@ -15,13 +15,50 @@ const LeftMenuComponent = React.lazy(() => import('./LeftMenuComponent'));
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { CurrentData: null };
   }
   componentDidMount() {
     ApiFetch('/api', 'post', { func: 'getUserData' }, (Response) => {
       GlobalStore.SetNewTopMenu(Response.menu);
     });
   }
+  FormatColumns(Columns) {
+    return Columns.map((Column, Index) => {
+      const NewColumn = {
+        title: Column.caption,
+        dataIndex: Index,
+        width: Column.width,
+      };
+      return NewColumn;
+    });
+  }
+  RequestAdministrationTable() {
+    ApiFetch(
+      '/api',
+      'post',
+      {
+        category: GlobalStore.CurrentTab.Options.CurrentMenuItem.id,
+        opts: {},
+        func: 'getObjectsList',
+      },
+      (TableIDResponse) => {
+        ApiFetch(
+          '/api',
+          'post',
+          { tid: TableIDResponse.tid, opts: {}, func: 'getTablePage' },
+          (Response) => {
+            this.setState({
+              CurrentData: {
+                Columns: this.FormatColumns(Response.cols),
+                Table: Response.rows,
+              },
+            });
+          }
+        );
+      }
+    );
+  }
+
   render() {
     return (
       <Provider ProviderStore={GlobalStore}>
@@ -35,7 +72,11 @@ export default class App extends React.Component {
                 >
                   {GlobalStore.CurrentTab != null &&
                   'Items' in GlobalStore.CurrentTab ? (
-                    <LeftMenuComponent />
+                    <LeftMenuComponent
+                      MenuItemHandler={() => {
+                        this.RequestAdministrationTable();
+                      }}
+                    />
                   ) : null}
                 </React.Suspense>
               </Sider>
@@ -62,6 +103,9 @@ export default class App extends React.Component {
                   onEdit={(TabKey, Action) => {
                     if (Action == 'remove') {
                       GlobalStore.DeleteTab(TabKey);
+                      if (GlobalStore.OpenTabs.length == 0) {
+                        this.setState({ CurrentData: null });
+                      }
                     }
                   }}
                 >
@@ -77,7 +121,11 @@ export default class App extends React.Component {
                             <Spin tip="Загрузка компонента" size="large" />
                           }
                         >
-                          {<Tab.Component />}
+                          {
+                            <Tab.Component
+                              CurrentData={this.state.CurrentData}
+                            />
+                          }
                         </React.Suspense>
                       </TabPane>
                     );

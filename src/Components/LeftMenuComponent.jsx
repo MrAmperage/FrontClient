@@ -9,7 +9,9 @@ export default class LeftMenuComponent extends React.Component {
     super(props);
     this.state = {};
   }
-
+  componentDidMount() {
+    this.props.MenuItemHandler();
+  }
   render() {
     return (
       <Menu
@@ -25,6 +27,7 @@ export default class LeftMenuComponent extends React.Component {
                 this.props.ProviderStore.SetNewCurrentMenuItem(
                   MenuItemInfo.key
                 );
+                this.props.MenuItemHandler();
               }}
             >
               {MenuItem.caption}
