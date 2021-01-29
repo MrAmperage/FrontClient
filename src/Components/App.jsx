@@ -9,13 +9,12 @@ const { Header, Sider, Content } = Layout;
 const { TabPane } = Tabs;
 import 'antd/dist/antd.css';
 import '../CSS/AppComponent.css';
-const LeftMenuComponent = React.lazy(() => import('./LeftMenuComponent'));
 
 @observer
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { CurrentData: null };
+    this.state = {};
   }
   componentDidMount() {
     ApiFetch('/api', 'post', { func: 'getUserData' }, (Response) => {
@@ -70,14 +69,11 @@ export default class App extends React.Component {
                 <React.Suspense
                   fallback={<Spin tip="Загрузка компонента" size="large" />}
                 >
-                  {GlobalStore.CurrentTab != null &&
-                  'Items' in GlobalStore.CurrentTab ? (
-                    <LeftMenuComponent
-                      MenuItemHandler={() => {
-                        this.RequestAdministrationTable();
-                      }}
-                    />
-                  ) : null}
+                  {GlobalStore.CurrentTab != null
+                    ? GlobalStore.CurrentTab.Options.LeftMenu.map((Item) => {
+                        return <Item.Component key={Item.Key} />;
+                      })
+                    : null}
                 </React.Suspense>
               </Sider>
               <Content>

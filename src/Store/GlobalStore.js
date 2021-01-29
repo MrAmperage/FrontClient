@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { Tab } from '../Classes/TabClass';
 
 class Store {
@@ -6,16 +6,7 @@ class Store {
   OpenTabs = [];
   CurrentTab = null;
   constructor() {
-    makeObservable(this, {
-      SetNewCurrentMenuItem: action,
-      TopMenu: observable,
-      OpenTabs: observable,
-      CurrentTab: observable,
-      SetNewCurrentTab: action,
-      SetNewTopMenu: action,
-      AddTab: action,
-      DeleteTab: action,
-    });
+    makeAutoObservable(this);
   }
   SetNewCurrentMenuItem(NewMenuItemKey) {
     this.CurrentTab.Options.CurrentMenuItem = this.CurrentTab.Items.find(

@@ -2,6 +2,7 @@ import MapObject from 'ol/Map';
 import OSM from 'ol/source/OSM';
 import * as React from 'react';
 import Stroke from 'ol/style/Stroke';
+import * as Moment from 'moment';
 import Style from 'ol/style/Style';
 import { Tile as TileLayer } from 'ol/layer';
 import Control from 'ol/control/Control';
@@ -27,6 +28,24 @@ export class Tab {
         ButtonBar.className = 'MatteGlass';
 
         this.Options = {
+          LeftMenu: [
+            {
+              Component: React.lazy(() =>
+                import('../Components/IntervalComponent')
+              ),
+              Key: 'Interval',
+            },
+          ],
+          StartDate:
+            Moment().hours() < 20
+              ? Moment('08:00:00', 'HH:mm:ss')
+              : Moment('20:00:00', 'HH:mm:ss'),
+
+          EndDate:
+            Moment().hours() < 20
+              ? Moment('20:00:00', 'HH:mm:ss')
+              : Moment('08:00:00', 'HH:mm:ss').add(1, 'day'),
+
           MapObject: new MapObject({
             interactions: defaults({ doubleClickZoom: false }),
             controls: [new Control({ element: ButtonBar })],
