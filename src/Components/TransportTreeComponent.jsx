@@ -14,9 +14,12 @@ export default class TransportTreeComponent extends React.Component {
 
   render() {
     return (
-      <div>
-        <Tree treeData={this.props.ProviderStore.TransportTree} />
-      </div>
+      <Tree
+        height={700}
+        treeData={this.props.ProviderStore.TransportTree}
+        checkable={true}
+        selectable={false}
+      />
     );
   }
 }

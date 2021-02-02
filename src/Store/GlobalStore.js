@@ -18,8 +18,21 @@ class Store {
       }
     );
   }
-  SetNewTransportTree(NewTransportTree) {
-    this.TransportTree = NewTransportTree;
+  SetNewTransportTree(GroupsData, TransportData) {
+    this.TransportTree = GroupsData.map((Group) => {
+      return {
+        title: Group.name,
+        key: Group.id,
+        children: Group.vehs.map((TransportID) => {
+          const Transport = TransportData.find((Transport) => {
+            if (Transport.id == TransportID) {
+              return true;
+            }
+          });
+          return { title: Transport.caption, key: Transport.id };
+        }),
+      };
+    });
   }
   SetNewCurrentTab(NewCurrentTabKey) {
     this.CurrentTab = this.OpenTabs.find((Tab) => {

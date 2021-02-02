@@ -19,9 +19,7 @@ export default class App extends React.Component {
   componentDidMount() {
     ApiFetch('/api', 'post', { func: 'getUserData' }, (Response) => {
       GlobalStore.SetNewTopMenu(Response.menu);
-      GlobalStore.SetNewTransportTree(
-        this.TreeDataConverter(Response.vgps.grps)
-      );
+      GlobalStore.SetNewTransportTree(Response.vgps.grps, Response.vgps.vehs);
     });
   }
   FormatColumns(Columns) {
@@ -32,22 +30,6 @@ export default class App extends React.Component {
         width: Column.width,
       };
       return NewColumn;
-    });
-  }
-  TreeDataConverter(RawTreeData) {
-    return RawTreeData.map((Item) => {
-      if (typeof Item == 'object') {
-        return {
-          title: Item.name,
-          key: Item.id,
-          children: this.TreeDataConverter(Item.vehs),
-        };
-      } else {
-        return {
-          title: Item,
-          key: Item,
-        };
-      }
     });
   }
 
