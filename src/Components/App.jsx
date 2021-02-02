@@ -19,6 +19,9 @@ export default class App extends React.Component {
   componentDidMount() {
     ApiFetch('/api', 'post', { func: 'getUserData' }, (Response) => {
       GlobalStore.SetNewTopMenu(Response.menu);
+      GlobalStore.SetNewTransportTree(
+        this.TreeDataConverter(Response.vgps.grps)
+      );
     });
   }
   FormatColumns(Columns) {
@@ -31,32 +34,49 @@ export default class App extends React.Component {
       return NewColumn;
     });
   }
-  RequestAdministrationTable() {
-    ApiFetch(
-      '/api',
-      'post',
-      {
-        category: GlobalStore.CurrentTab.Options.CurrentMenuItem.id,
-        opts: {},
-        func: 'getObjectsList',
-      },
-      (TableIDResponse) => {
-        ApiFetch(
-          '/api',
-          'post',
-          { tid: TableIDResponse.tid, opts: {}, func: 'getTablePage' },
-          (Response) => {
-            this.setState({
-              CurrentData: {
-                Columns: this.FormatColumns(Response.cols),
-                Table: Response.rows,
-              },
-            });
-          }
-        );
+  TreeDataConverter(RawTreeData) {
+    return RawTreeData.map((Item) => {
+      if (typeof Item == 'object') {
+        return {
+          title: Item.name,
+          key: Item.id,
+          children: this.TreeDataConverter(Item.vehs),
+        };
+      } else {
+        return {
+          title: Item,
+          key: Item,
+        };
       }
-    );
+    });
   }
+
+  // RequestAdministrationTable() {
+  //   ApiFetch(
+  //     '/api',
+  //     'post',
+  //     {
+  //       category: GlobalStore.CurrentTab.Options.CurrentMenuItem.id,
+  //       opts: {},
+  //       func: 'getObjectsList',
+  //     },
+  //     (TableIDResponse) => {
+  //       ApiFetch(
+  //         '/api',
+  //         'post',
+  //         { tid: TableIDResponse.tid, opts: {}, func: 'getTablePage' },
+  //         (Response) => {
+  //           this.setState({
+  //             CurrentData: {
+  //               Columns: this.FormatColumns(Response.cols),
+  //               Table: Response.rows,
+  //             },
+  //           });
+  //         }
+  //       );
+  //     }
+  //   );
+  // }
 
   render() {
     return (

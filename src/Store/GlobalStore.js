@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx';
 import { Tab } from '../Classes/TabClass';
 
 class Store {
+  TransportTree = [];
   TopMenu = [];
   OpenTabs = [];
   CurrentTab = null;
@@ -17,7 +18,9 @@ class Store {
       }
     );
   }
-
+  SetNewTransportTree(NewTransportTree) {
+    this.TransportTree = NewTransportTree;
+  }
   SetNewCurrentTab(NewCurrentTabKey) {
     this.CurrentTab = this.OpenTabs.find((Tab) => {
       if (Tab.Key == NewCurrentTabKey) {

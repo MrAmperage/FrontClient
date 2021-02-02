@@ -35,6 +35,12 @@ export class Tab {
               ),
               Key: 'Interval',
             },
+            {
+              Component: React.lazy(() =>
+                import('../Components/TransportTreeComponent')
+              ),
+              Key: 'TransportTree',
+            },
           ],
           StartDate:
             Moment().hours() < 20
