@@ -18,6 +18,10 @@ class Store {
       }
     );
   }
+  SetNewDateTimeInterval(NewStartDate, NewEndDate) {
+    this.CurrentTab.Options.StartDate = NewStartDate;
+    this.CurrentTab.Options.EndDate = NewEndDate;
+  }
   SetNewTransportTree(GroupsData, TransportData) {
     this.TransportTree = GroupsData.map((Group) => {
       return {

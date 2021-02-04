@@ -14,21 +14,47 @@ export default class FooterIntervalModalWindow extends React.Component {
     return (
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
-          <Button size="small" onClick={() => {}}>
+          <Button
+            size="small"
+            onClick={() => {
+              this.props.ButtonHandler('FirstShift');
+            }}
+          >
             Первая смена
           </Button>
-          <Button size="small" onClick={() => {}}>
+          <Button
+            size="small"
+            onClick={() => {
+              this.props.ButtonHandler('SecondShift');
+            }}
+          >
             Вторая смена
           </Button>
-          <Button size="small" onClick={() => {}}>
+          <Button
+            size="small"
+            onClick={() => {
+              this.props.ButtonHandler('FullDay');
+            }}
+          >
             Сутки
           </Button>
         </div>
         <div>
-          <Button size="small" type="primary" onClick={() => {}}>
+          <Button
+            size="small"
+            type="primary"
+            onClick={() => {
+              this.props.ButtonHandler('Apply');
+            }}
+          >
             Применить
           </Button>
-          <Button size="small" onClick={() => {}}>
+          <Button
+            size="small"
+            onClick={() => {
+              this.props.ButtonHandler('Cancel');
+            }}
+          >
             Отмена
           </Button>
         </div>

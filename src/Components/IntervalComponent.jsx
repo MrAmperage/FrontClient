@@ -15,27 +15,44 @@ export default class IntervalComponent extends React.Component {
     };
   }
   ButtonHandler = (Button) => {
+    const NewStartDate = this.state.StartDate.clone();
     switch (Button) {
       case 'FirstShift':
         this.setState({
-          StartDate: this.state.SelectStartDate.clone()
-            .hours(8)
-            .minutes(0)
-            .seconds(0),
-          EndDate: this.state.SelectStartDate.clone()
-            .hours(20)
-            .minutes(0)
-            .seconds(0),
+          StartDate: NewStartDate.clone().hours(8).minutes(0).seconds(0),
+          EndDate: NewStartDate.clone().hours(20).minutes(0).seconds(0),
         });
 
         break;
       case 'SecondShift':
+        this.setState({
+          StartDate: NewStartDate.clone().hours(20).minutes(0).seconds(0),
+          EndDate: NewStartDate.clone()
+            .add(1, 'day')
+            .hours(8)
+            .minutes(0)
+            .seconds(0),
+        });
         break;
       case 'FullDay':
+        this.setState({
+          StartDate: NewStartDate.clone().hours(8).minutes(0).seconds(0),
+          EndDate: NewStartDate.clone()
+            .add(1, 'day')
+            .hours(8)
+            .minutes(0)
+            .seconds(0),
+        });
         break;
       case 'Apply':
+        this.props.ProviderStore.SetNewDateTimeInterval(
+          this.state.StartDate,
+          this.state.EndDate
+        );
+        this.ModalHandler(false);
         break;
       case 'Cancel':
+        this.ModalHandler(false);
         break;
     }
   };
@@ -46,10 +63,15 @@ export default class IntervalComponent extends React.Component {
     return (
       <div>
         <Modal
+          onCancel={() => {
+            this.ModalHandler(false);
+          }}
           width="700px"
           zIndex={9998}
           visible={this.state.OpenModal}
-          footer={<FooterIntervalModalWindow />}
+          footer={
+            <FooterIntervalModalWindow ButtonHandler={this.ButtonHandler} />
+          }
         >
           <div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
@@ -63,7 +85,7 @@ export default class IntervalComponent extends React.Component {
                     this.props.ProviderStore.CurrentTab.Options.StartDate
                   }
                   fullscreen={false}
-                  value={this.state.SelectStartDate}
+                  value={this.state.StartDate}
                 />
                 <TimePicker
                   onOk={(NewStartTime) => {
@@ -85,6 +107,7 @@ export default class IntervalComponent extends React.Component {
                   defaultValue={
                     this.props.ProviderStore.CurrentTab.Options.EndDate
                   }
+                  value={this.state.EndDate}
                 />
                 <TimePicker
                   onOk={(NewEndTime) => {
