@@ -25,12 +25,12 @@
     "antd": "^4.12.2",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
-    "mobx": "^6.1.4",
+    "mobx": "^6.1.5",
     "mobx-react": "^7.1.0",
     "moment": "^2.29.1",
     "ol": "^6.5.0",
     "style-loader": "^2.0.0",
-    "webpack": "^5.20.1",
+    "webpack": "^5.20.2",
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
