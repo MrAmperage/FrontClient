@@ -1,5 +1,10 @@
 export const ApiFetch = (Adress, Method, Body, Callback) => {
-  fetch(Adress, { body: JSON.stringify(Body), method: Method })
+  fetch(
+    Adress,
+    Method == 'get'
+      ? { method: Method }
+      : { body: JSON.stringify(Body), method: Method }
+  )
     .then((JSONResponse) => {
       JSONResponse.json()
         .then((Response) => {

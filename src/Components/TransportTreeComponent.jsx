@@ -6,9 +6,7 @@ import { Tree } from 'antd';
 export default class TransportTreeComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ChechedKeys: [],
-    };
+    this.state = {};
   }
   TransportChech = (CheckedKey) => {
     let CheckedKeysArray = [];
@@ -21,7 +19,7 @@ export default class TransportTreeComponent extends React.Component {
         });
       });
     });
-    this.setState({ ChechedKeys: CheckedKeysArray });
+    this.props.ProviderStore.SetNewCheckedTransportKeys(CheckedKeysArray);
   };
   render() {
     return (

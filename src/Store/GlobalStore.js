@@ -18,6 +18,9 @@ class Store {
       }
     );
   }
+  SetNewCheckedTransportKeys(NewTransportKeys) {
+    this.CurrentTab.CheckedTransportKeys = NewTransportKeys;
+  }
   SetNewDateTimeInterval(NewStartDate, NewEndDate) {
     this.CurrentTab.Options.StartDate = NewStartDate;
     this.CurrentTab.Options.EndDate = NewEndDate;
