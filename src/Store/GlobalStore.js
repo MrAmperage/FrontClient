@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { Tab } from '../Classes/TabClass';
+import { ApiFetch } from '../Helpers/Helpers';
+import GeoJSON from 'ol/format/GeoJSON';
 
 class Store {
   TransportTree = [];
@@ -18,8 +20,33 @@ class Store {
       }
     );
   }
+  AddTrack = (TransportId) => {
+    ApiFetch(
+      `/trackGeoJSON?oid=${TransportId}&sts=${
+        this.CurrentTab.Options.StartDate.unix() - 1230768000
+      }&fts=${this.CurrentTab.Options.EndDate.unix() - 1230768000}`,
+      'get',
+      null,
+      (Response) => {
+        Response.id = `Track${TransportId}`;
+        this.CurrentTab.Options.MapObject.getLayers()
+          .array_[1].getSource()
+          .addFeature(
+            new GeoJSON().readFeature(Response, {
+              dataProjection: 'EPSG:4326',
+              featureProjection: 'EPSG:3857',
+            })
+          );
+      }
+    );
+  };
   SetNewCheckedTransportKeys(NewTransportKeys) {
-    this.CurrentTab.CheckedTransportKeys = NewTransportKeys;
+    NewTransportKeys.forEach((Key) => {
+      if (!this.CurrentTab.Options.CheckedTransportKeys.includes(Key)) {
+        this.AddTrack(Key);
+        this.CurrentTab.Options.CheckedTransportKeys.push(Key);
+      }
+    });
   }
   SetNewDateTimeInterval(NewStartDate, NewEndDate) {
     this.CurrentTab.Options.StartDate = NewStartDate;

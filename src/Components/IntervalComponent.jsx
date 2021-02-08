@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Modal, Calendar, TimePicker } from 'antd';
-import { ApiFetch } from '../Helpers/Helpers';
 
 import FooterIntervalModalWindow from './FooterIntervalModalWindow';
 
@@ -59,16 +58,7 @@ export default class IntervalComponent extends React.Component {
         break;
     }
   };
-  FetchGeoJson = () => {
-    ApiFetch(
-      '/trackGeoJSON?oid=203013525&sts=381891600&fts=381934800',
-      'get',
-      { oid: 203013525, sts: 381891600, fts: 381934800 },
-      (Response) => {
-        console.log(Response);
-      }
-    );
-  };
+
   ModalHandler = (Boolean) => {
     this.setState({ OpenModal: Boolean });
   };

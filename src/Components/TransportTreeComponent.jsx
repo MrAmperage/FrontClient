@@ -19,12 +19,13 @@ export default class TransportTreeComponent extends React.Component {
         });
       });
     });
+
     this.props.ProviderStore.SetNewCheckedTransportKeys(CheckedKeysArray);
   };
   render() {
     return (
       <Tree
-        onCheck={(CheckedKeys) => {
+        onCheck={(CheckedKeys, Info) => {
           this.TransportChech(CheckedKeys);
         }}
         height={700}

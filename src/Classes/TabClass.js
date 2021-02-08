@@ -26,8 +26,8 @@ export class Tab {
         let ButtonBar = document.createElement('div');
         ButtonBar.id = `ButtonBar${this.Key}`;
         ButtonBar.className = 'MatteGlass';
-        this.CheckedTransportKeys = [];
         this.Options = {
+          CheckedTransportKeys: [],
           LeftMenu: [
             {
               Component: React.lazy(() =>
