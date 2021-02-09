@@ -49,6 +49,12 @@ class Store {
           .getFeatureById(`Track${TransportID}`)
       );
   }
+  UpdateTracks() {
+    this.CurrentTab.Options.CheckedTransportKeys.forEach((Key) => {
+      this.DeleteTrack(Key);
+      this.AddTrack(Key);
+    });
+  }
   SetNewCheckedTransportKeys(NewTransportKeys) {
     if (
       NewTransportKeys.length > this.CurrentTab.Options.CheckedTransportKeys
