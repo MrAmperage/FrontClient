@@ -30,6 +30,9 @@ export default class TransportTreeComponent extends React.Component {
         }}
         height={700}
         treeData={this.props.ProviderStore.TransportTree}
+        defaultCheckedKeys={
+          this.props.ProviderStore.CurrentTab.Options.CheckedTransportKeys
+        }
         checkable={true}
         selectable={false}
       />

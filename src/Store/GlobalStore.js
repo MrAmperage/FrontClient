@@ -40,13 +40,33 @@ class Store {
       }
     );
   };
+  DeleteTrack(TransportID) {
+    this.CurrentTab.Options.MapObject.getLayers()
+      .array_[1].getSource()
+      .removeFeature(
+        this.CurrentTab.Options.MapObject.getLayers()
+          .array_[1].getSource()
+          .getFeatureById(`Track${TransportID}`)
+      );
+  }
   SetNewCheckedTransportKeys(NewTransportKeys) {
-    NewTransportKeys.forEach((Key) => {
-      if (!this.CurrentTab.Options.CheckedTransportKeys.includes(Key)) {
-        this.AddTrack(Key);
-        this.CurrentTab.Options.CheckedTransportKeys.push(Key);
-      }
-    });
+    if (
+      NewTransportKeys.length > this.CurrentTab.Options.CheckedTransportKeys
+    ) {
+      NewTransportKeys.forEach((Key) => {
+        if (!this.CurrentTab.Options.CheckedTransportKeys.includes(Key)) {
+          this.AddTrack(Key);
+        }
+      });
+    } else {
+      this.CurrentTab.Options.CheckedTransportKeys.forEach((Key) => {
+        if (!NewTransportKeys.includes(Key)) {
+          this.DeleteTrack(Key);
+        }
+      });
+    }
+
+    this.CurrentTab.Options.CheckedTransportKeys = NewTransportKeys;
   }
   SetNewDateTimeInterval(NewStartDate, NewEndDate) {
     this.CurrentTab.Options.StartDate = NewStartDate;

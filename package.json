@@ -24,7 +24,7 @@
     "@babel/preset-react": "^7.12.13",
     "antd": "^4.12.2",
     "babel-loader": "^8.2.2",
-    "css-loader": "^5.0.1",
+    "css-loader": "^5.0.2",
     "mobx": "^6.1.5",
     "mobx-react": "^7.1.0",
     "moment": "^2.29.1",
