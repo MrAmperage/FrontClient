@@ -58,13 +58,19 @@ class Store {
     );
   };
   DeleteTrack(TransportID) {
-    this.CurrentTab.Options.MapObject.getLayers()
-      .array_[1].getSource()
-      .removeFeature(
-        this.CurrentTab.Options.MapObject.getLayers()
-          .array_[1].getSource()
-          .getFeatureById(`Track${TransportID}`)
-      );
+    if (
+      this.CurrentTab.Options.MapObject.getLayers()
+        .array_[1].getSource()
+        .getFeatureById(`Track${TransportID}`) != null
+    ) {
+      this.CurrentTab.Options.MapObject.getLayers()
+        .array_[1].getSource()
+        .removeFeature(
+          this.CurrentTab.Options.MapObject.getLayers()
+            .array_[1].getSource()
+            .getFeatureById(`Track${TransportID}`)
+        );
+    }
   }
   UpdateTracks() {
     this.CurrentTab.Options.CheckedTransportKeys.forEach((Key) => {
