@@ -31,27 +31,29 @@ class Store {
       'get',
       null,
       (Response) => {
-        let NewFeature = new GeoJSON().readFeature(Response, {
-          dataProjection: 'EPSG:4326',
-          featureProjection: 'EPSG:3857',
-        });
-        NewFeature.setId(`Track${TransportId}`);
-        NewFeature.setStyle(
-          new Style({
-            stroke: new Stroke({
-              color: RandomColor(),
-              width: 3,
-            }),
-          })
-        );
-        this.CurrentTab.Options.MapObject.getLayers()
-          .array_[1].getSource()
-          .addFeature(NewFeature);
-        this.CurrentTab.Options.MapObject.getView().fit(
+        if (Response.geometry.coordinates.length > 0) {
+          let NewFeature = new GeoJSON().readFeature(Response, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857',
+          });
+          NewFeature.setId(`Track${TransportId}`);
+          NewFeature.setStyle(
+            new Style({
+              stroke: new Stroke({
+                color: RandomColor(),
+                width: 3,
+              }),
+            })
+          );
           this.CurrentTab.Options.MapObject.getLayers()
             .array_[1].getSource()
-            .getExtent()
-        );
+            .addFeature(NewFeature);
+          this.CurrentTab.Options.MapObject.getView().fit(
+            this.CurrentTab.Options.MapObject.getLayers()
+              .array_[1].getSource()
+              .getExtent()
+          );
+        }
       }
     );
   };
