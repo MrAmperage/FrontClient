@@ -65,8 +65,7 @@ export class Tab {
                 style: new Style({
                   stroke: new Stroke({
                     color: 'rgb(24, 144, 255)',
-                    lineDash: [10, 10],
-                    width: 3,
+                    width: 2,
                   }),
                 }),
                 source: new VectorSource(),

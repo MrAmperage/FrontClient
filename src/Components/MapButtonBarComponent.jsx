@@ -59,7 +59,7 @@ export default class MapButtonBarComponent extends React.Component {
           stroke: new Stroke({
             color: 'rgb(24, 144, 255)',
             lineDash: [10, 10],
-            width: 3,
+            width: 2,
           }),
         }),
       });
@@ -97,6 +97,15 @@ export default class MapButtonBarComponent extends React.Component {
         });
       });
       DrawObject.on('drawend', (DrawEvent) => {
+        DrawEvent.feature.setStyle(
+          new Style({
+            stroke: new Stroke({
+              color: 'rgb(24, 144, 255)',
+              lineDash: [10, 10],
+              width: 2,
+            }),
+          })
+        );
         DrawEvent.feature.setId(
           `Ruler${
             this.props.ProviderStore.CurrentTab.Options.MapObject.getLayers()

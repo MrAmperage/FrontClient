@@ -2,6 +2,9 @@ import { makeAutoObservable } from 'mobx';
 import { Tab } from '../Classes/TabClass';
 import { ApiFetch } from '../Helpers/Helpers';
 import GeoJSON from 'ol/format/GeoJSON';
+import { RandomColor } from '../Helpers/Helpers';
+import Style from 'ol/style/Style';
+import Stroke from 'ol/style/Stroke';
 
 class Store {
   TransportTree = [];
@@ -28,15 +31,27 @@ class Store {
       'get',
       null,
       (Response) => {
-        Response.id = `Track${TransportId}`;
+        let NewFeature = new GeoJSON().readFeature(Response, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:3857',
+        });
+        NewFeature.setId(`Track${TransportId}`);
+        NewFeature.setStyle(
+          new Style({
+            stroke: new Stroke({
+              color: RandomColor(),
+              width: 3,
+            }),
+          })
+        );
         this.CurrentTab.Options.MapObject.getLayers()
           .array_[1].getSource()
-          .addFeature(
-            new GeoJSON().readFeature(Response, {
-              dataProjection: 'EPSG:4326',
-              featureProjection: 'EPSG:3857',
-            })
-          );
+          .addFeature(NewFeature);
+        this.CurrentTab.Options.MapObject.getView().fit(
+          this.CurrentTab.Options.MapObject.getLayers()
+            .array_[1].getSource()
+            .getExtent()
+        );
       }
     );
   };

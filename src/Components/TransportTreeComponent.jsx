@@ -25,7 +25,10 @@ export default class TransportTreeComponent extends React.Component {
   render() {
     return (
       <Tree
-        onCheck={(CheckedKeys, Info) => {
+        defaultExpandedKeys={
+          this.props.ProviderStore.CurrentTab.Options.CheckedTransportKeys
+        }
+        onCheck={(CheckedKeys) => {
           this.TransportChech(CheckedKeys);
         }}
         height={700}

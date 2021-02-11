@@ -18,3 +18,9 @@ export const ApiFetch = (Adress, Method, Body, Callback) => {
       console.log(FetchError);
     });
 };
+
+export function RandomColor() {
+  return (
+    '#' + (Math.random().toString(16) + '000000').substring(2, 8).toUpperCase()
+  );
+}
