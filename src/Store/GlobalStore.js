@@ -24,38 +24,36 @@ class Store {
     );
   }
   AddTrack = (TransportId) => {
-    ApiFetch(
-      `/trackGeoJSON?oid=${TransportId}&sts=${
-        this.CurrentTab.Options.StartDate.unix() - 1230768000
-      }&fts=${this.CurrentTab.Options.EndDate.unix() - 1230768000}`,
-      'get',
-      null,
-      (Response) => {
-        if (Response.geometry.coordinates.length > 0) {
-          let NewFeature = new GeoJSON().readFeature(Response, {
-            dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:3857',
-          });
-          NewFeature.setId(`Track${TransportId}`);
-          NewFeature.setStyle(
-            new Style({
-              stroke: new Stroke({
-                color: RandomColor(),
-                width: 3,
-              }),
-            })
-          );
-          this.CurrentTab.Options.MapObject.getLayers()
-            .array_[1].getSource()
-            .addFeature(NewFeature);
-          this.CurrentTab.Options.MapObject.getView().fit(
+    return new Promise((resolve, reject) => {
+      ApiFetch(
+        `/trackGeoJSON?oid=${TransportId}&sts=${
+          this.CurrentTab.Options.StartDate.unix() - 1230768000
+        }&fts=${this.CurrentTab.Options.EndDate.unix() - 1230768000}`,
+        'get',
+        null,
+        (Response) => {
+          if (Response.geometry.coordinates.length > 0) {
+            let NewFeature = new GeoJSON().readFeature(Response, {
+              dataProjection: 'EPSG:4326',
+              featureProjection: 'EPSG:3857',
+            });
+            NewFeature.setId(`Track${TransportId}`);
+            NewFeature.setStyle(
+              new Style({
+                stroke: new Stroke({
+                  color: RandomColor(),
+                  width: 3,
+                }),
+              })
+            );
             this.CurrentTab.Options.MapObject.getLayers()
               .array_[1].getSource()
-              .getExtent()
-          );
+              .addFeature(NewFeature);
+          }
+          resolve();
         }
-      }
-    );
+      );
+    });
   };
   DeleteTrack(TransportID) {
     if (
@@ -77,14 +75,42 @@ class Store {
       this.DeleteTrack(Key);
       this.AddTrack(Key);
     });
+    if (
+      this.CurrentTab.Options.MapObject.getLayers()
+        .array_[1].getSource()
+        .getFeatures() > 0
+    ) {
+      this.CurrentTab.Options.MapObject.getView().fit(
+        this.CurrentTab.Options.MapObject.getLayers()
+          .array_[1].getSource()
+          .getExtent()
+      );
+    }
   }
   SetNewCheckedTransportKeys(NewTransportKeys) {
+    let PromiseArray = [];
+
     if (
-      NewTransportKeys.length > this.CurrentTab.Options.CheckedTransportKeys
+      NewTransportKeys.length >
+      this.CurrentTab.Options.CheckedTransportKeys.length
     ) {
       NewTransportKeys.forEach((Key) => {
         if (!this.CurrentTab.Options.CheckedTransportKeys.includes(Key)) {
-          this.AddTrack(Key);
+          PromiseArray.push(this.AddTrack(Key));
+        }
+      });
+
+      Promise.all(PromiseArray).then(() => {
+        if (
+          this.CurrentTab.Options.MapObject.getLayers()
+            .array_[1].getSource()
+            .getFeatures().length > 0
+        ) {
+          this.CurrentTab.Options.MapObject.getView().fit(
+            this.CurrentTab.Options.MapObject.getLayers()
+              .array_[1].getSource()
+              .getExtent()
+          );
         }
       });
     } else {
