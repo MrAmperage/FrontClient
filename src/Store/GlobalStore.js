@@ -69,6 +69,17 @@ class Store {
             .getFeatureById(`Track${TransportID}`)
         );
     }
+    if (
+      this.CurrentTab.Options.MapObject.getLayers()
+        .array_[1].getSource()
+        .getFeatures().length != 0
+    ) {
+      this.CurrentTab.Options.MapObject.getView().fit(
+        this.CurrentTab.Options.MapObject.getLayers()
+          .array_[1].getSource()
+          .getExtent()
+      );
+    }
   }
   UpdateTracks() {
     this.CurrentTab.Options.CheckedTransportKeys.forEach((Key) => {
