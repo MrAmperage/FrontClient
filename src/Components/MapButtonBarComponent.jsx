@@ -11,6 +11,8 @@ import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import Overlay from 'ol/Overlay';
 import LineString from 'ol/geom/LineString';
+import TrackPlayerComponent from './TrackPlayerComponent';
+import Control from 'ol/control/Control';
 
 @inject('ProviderStore')
 @observer
@@ -19,6 +21,16 @@ export default class MapButtonBarComponent extends React.Component {
     super(props);
     this.state = {};
   }
+  TrackPlayer = () => {
+    const TrackPlayerElement = document.createElement('div');
+    const TrackPlayerControl = new Control({
+      element: TrackPlayerElement,
+    });
+    this.props.ProviderStore.CurrentTab.Options.MapObject.addControl(
+      TrackPlayerControl
+    );
+    ReactDOM.render(<TrackPlayerComponent />, TrackPlayerElement);
+  };
   FormatLength = (Line) => {
     if (getLength(Line) > 100) {
       return `${Math.round((getLength(Line) / 1000) * 100) / 100} km`;
@@ -132,7 +144,14 @@ export default class MapButtonBarComponent extends React.Component {
         >
           Линейка
         </Button>
-        <Button size="small" type="primary" style={{ marginLeft: '10px' }}>
+        <Button
+          size="small"
+          type="primary"
+          style={{ marginLeft: '10px' }}
+          onClick={() => {
+            this.TrackPlayer();
+          }}
+        >
           Плеер треков
         </Button>
       </div>
