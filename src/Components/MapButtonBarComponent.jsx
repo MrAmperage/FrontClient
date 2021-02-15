@@ -22,14 +22,22 @@ export default class MapButtonBarComponent extends React.Component {
     this.state = {};
   }
   TrackPlayer = () => {
-    const TrackPlayerElement = document.createElement('div');
-    const TrackPlayerControl = new Control({
-      element: TrackPlayerElement,
-    });
-    this.props.ProviderStore.CurrentTab.Options.MapObject.addControl(
-      TrackPlayerControl
-    );
-    ReactDOM.render(<TrackPlayerComponent />, TrackPlayerElement);
+    if (
+      this.props.ProviderStore.CurrentTab.Options.MapObject.getControls().array_
+        .length == 1
+    ) {
+      const TrackPlayerElement = document.createElement('div');
+      const TrackPlayerControl = new Control({
+        element: TrackPlayerElement,
+      });
+      this.props.ProviderStore.CurrentTab.Options.MapObject.addControl(
+        TrackPlayerControl
+      );
+      ReactDOM.render(
+        <TrackPlayerComponent ProviderStore={this.props.ProviderStore} />,
+        TrackPlayerElement
+      );
+    }
   };
   FormatLength = (Line) => {
     if (getLength(Line) > 100) {
