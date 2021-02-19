@@ -33,33 +33,6 @@ export default class App extends React.Component {
     });
   }
 
-  // RequestAdministrationTable() {
-  //   ApiFetch(
-  //     '/api',
-  //     'post',
-  //     {
-  //       category: GlobalStore.CurrentTab.Options.CurrentMenuItem.id,
-  //       opts: {},
-  //       func: 'getObjectsList',
-  //     },
-  //     (TableIDResponse) => {
-  //       ApiFetch(
-  //         '/api',
-  //         'post',
-  //         { tid: TableIDResponse.tid, opts: {}, func: 'getTablePage' },
-  //         (Response) => {
-  //           this.setState({
-  //             CurrentData: {
-  //               Columns: this.FormatColumns(Response.cols),
-  //               Table: Response.rows,
-  //             },
-  //           });
-  //         }
-  //       );
-  //     }
-  //   );
-  // }
-
   render() {
     return (
       <Provider ProviderStore={GlobalStore}>
@@ -101,9 +74,6 @@ export default class App extends React.Component {
                   onEdit={(TabKey, Action) => {
                     if (Action == 'remove') {
                       GlobalStore.DeleteTab(TabKey);
-                      if (GlobalStore.OpenTabs.length == 0) {
-                        this.setState({ CurrentData: null });
-                      }
                     }
                   }}
                 >
@@ -119,11 +89,7 @@ export default class App extends React.Component {
                             <Spin tip="Загрузка компонента" size="large" />
                           }
                         >
-                          {
-                            <Tab.Component
-                              CurrentData={this.state.CurrentData}
-                            />
-                          }
+                          {<Tab.Component />}
                         </React.Suspense>
                       </TabPane>
                     );

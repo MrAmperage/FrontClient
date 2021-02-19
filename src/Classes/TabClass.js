@@ -23,9 +23,7 @@ export class Tab {
     switch (TabObject.id) {
       case 'map':
         this.Component = React.lazy(() => import('../Components/MapComponent'));
-        let ButtonBar = document.createElement('div');
-        ButtonBar.id = `ButtonBar${this.Key}`;
-        ButtonBar.className = 'MatteGlass';
+
         this.Options = {
           CheckedTransportKeys: [],
           LeftMenu: [
@@ -54,7 +52,7 @@ export class Tab {
 
           MapObject: new MapObject({
             interactions: defaults({ doubleClickZoom: false }),
-            controls: [new Control({ element: ButtonBar })],
+            controls: [],
 
             layers: [
               new TileLayer({

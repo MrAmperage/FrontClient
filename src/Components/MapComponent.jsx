@@ -4,6 +4,7 @@ import { observer, inject } from 'mobx-react';
 import '../CSS/MapComponent.css';
 import MapButtonBarComponent from './MapButtonBarComponent';
 import 'ol/ol.css';
+import Control from 'ol/control/Control';
 @inject('ProviderStore')
 @observer
 export default class MapComponent extends React.Component {
@@ -11,17 +12,15 @@ export default class MapComponent extends React.Component {
     super(props);
     this.state = {};
     this.MapRef = React.createRef();
+    this.ButtonBar = document.createElement('div');
   }
   InitMap = () => {
+    this.ButtonBar.className = 'MatteGlass';
     this.props.ProviderStore.CurrentTab.Options.MapObject.setTarget(
       this.MapRef.current
     );
-    ReactDOM.render(
-      <MapButtonBarComponent ProviderStore={this.props.ProviderStore} />,
-
-      document.getElementById(
-        `ButtonBar${this.props.ProviderStore.CurrentTab.Key}`
-      )
+    this.props.ProviderStore.CurrentTab.Options.MapObject.addControl(
+      new Control({ element: this.ButtonBar })
     );
   };
   componentDidMount() {
@@ -29,6 +28,11 @@ export default class MapComponent extends React.Component {
   }
 
   render() {
-    return <div ref={this.MapRef} className="FullExtend" />;
+    return (
+      <React.Fragment>
+        <div ref={this.MapRef} className="FullExtend" />
+        {ReactDOM.createPortal(<MapButtonBarComponent />, this.ButtonBar)}
+      </React.Fragment>
+    );
   }
 }
