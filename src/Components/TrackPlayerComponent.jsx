@@ -2,6 +2,10 @@ import * as React from 'react';
 import { Slider, Button, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import * as Moment from 'moment';
+import { observer, inject } from 'mobx-react';
+
+@inject('ProviderStore')
+@observer
 export default class TrackPlayerComponent extends React.Component {
   constructor(props) {
     super(props);

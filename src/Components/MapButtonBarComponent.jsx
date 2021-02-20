@@ -19,6 +19,7 @@ import Control from 'ol/control/Control';
 export default class MapButtonBarComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.TrackPlayerElement = document.createElement('div');
     this.state = {};
   }
   TrackPlayer = () => {
@@ -26,16 +27,13 @@ export default class MapButtonBarComponent extends React.Component {
       this.props.ProviderStore.CurrentTab.Options.MapObject.getControls().array_
         .length == 1
     ) {
-      const TrackPlayerElement = document.createElement('div');
-      const TrackPlayerControl = new Control({
-        element: TrackPlayerElement,
+      new Control({
+        element: this.TrackPlayerElement,
       });
       this.props.ProviderStore.CurrentTab.Options.MapObject.addControl(
-        TrackPlayerControl
-      );
-      ReactDOM.render(
-        <TrackPlayerComponent ProviderStore={this.props.ProviderStore} />,
-        TrackPlayerElement
+        new Control({
+          element: this.TrackPlayerElement,
+        })
       );
     }
   };
@@ -142,27 +140,33 @@ export default class MapButtonBarComponent extends React.Component {
 
   render() {
     return (
-      <div style={{ padding: '5px' }}>
-        <Button
-          size="small"
-          type="primary"
-          onClick={() => {
-            this.Ruler();
-          }}
-        >
-          Линейка
-        </Button>
-        <Button
-          size="small"
-          type="primary"
-          style={{ marginLeft: '10px' }}
-          onClick={() => {
-            this.TrackPlayer();
-          }}
-        >
-          Плеер треков
-        </Button>
-      </div>
+      <React.Fragment>
+        <div style={{ padding: '5px' }}>
+          <Button
+            size="small"
+            type="primary"
+            onClick={() => {
+              this.Ruler();
+            }}
+          >
+            Линейка
+          </Button>
+          <Button
+            size="small"
+            type="primary"
+            style={{ marginLeft: '10px' }}
+            onClick={() => {
+              this.TrackPlayer();
+            }}
+          >
+            Плеер треков
+          </Button>
+        </div>
+        {ReactDOM.createPortal(
+          <TrackPlayerComponent />,
+          this.TrackPlayerElement
+        )}
+      </React.Fragment>
     );
   }
 }
