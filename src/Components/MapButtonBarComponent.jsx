@@ -27,9 +27,6 @@ export default class MapButtonBarComponent extends React.Component {
       this.props.ProviderStore.CurrentTab.Options.MapObject.getControls().array_
         .length == 1
     ) {
-      new Control({
-        element: this.TrackPlayerElement,
-      });
       this.props.ProviderStore.CurrentTab.Options.MapObject.addControl(
         new Control({
           element: this.TrackPlayerElement,
@@ -99,7 +96,9 @@ export default class MapButtonBarComponent extends React.Component {
           if (MoveEvent.target instanceof LineString) {
             ReactDOM.render(
               <MapTooltipComponent
-                ProviderStore={this.props.ProviderStore}
+                MapObject={
+                  this.props.ProviderStore.CurrentTab.Options.MapObject
+                }
                 Distance={this.FormatLength(MoveEvent.target)}
                 TooltipID={`Ruler${
                   this.props.ProviderStore.CurrentTab.Options.MapObject.getLayers()
