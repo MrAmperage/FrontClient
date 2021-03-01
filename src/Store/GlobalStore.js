@@ -5,6 +5,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { RandomColor } from '../Helpers/Helpers';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
+import * as Moment from 'moment';
 
 class Store {
   TransportTree = [];
@@ -134,7 +135,11 @@ class Store {
 
     this.CurrentTab.Options.CheckedTransportKeys = NewTransportKeys;
   }
+  SetNewCurrentTimeTrackPlayer(NewTime) {
+    this.CurrentTab.Options.CurrentTrackPlayerTime = Moment.unix(NewTime);
+  }
   SetNewDateTimeInterval(NewStartDate, NewEndDate) {
+    this.CurrentTab.Options.CurrentTrackPlayerTime = NewStartDate;
     this.CurrentTab.Options.StartDate = NewStartDate;
     this.CurrentTab.Options.EndDate = NewEndDate;
   }

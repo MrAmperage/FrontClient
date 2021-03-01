@@ -9,9 +9,7 @@ import { observer, inject } from 'mobx-react';
 export default class TrackPlayerComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      CurrentTime: this.props.ProviderStore.CurrentTab.Options.StartDate.clone().unix(),
-    };
+    this.state = {};
   }
   RemoveTrackPlayer = () => {
     this.props.ProviderStore.CurrentTab.Options.MapObject.removeControl(
@@ -40,12 +38,11 @@ export default class TrackPlayerComponent extends React.Component {
         <Slider
           tooltipVisible={false}
           onChange={(NewTime) => {
-            this.setState({
-              CurrentTime: NewTime,
-            });
+            this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(NewTime);
           }}
           min={this.props.ProviderStore.CurrentTab.Options.StartDate.unix()}
           max={this.props.ProviderStore.CurrentTab.Options.EndDate.unix()}
+          value={this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix()}
           style={{
             width: '350px',
           }}
@@ -53,7 +50,9 @@ export default class TrackPlayerComponent extends React.Component {
         <Input
           size="small"
           style={{ width: '70px' }}
-          value={Moment.unix(this.state.CurrentTime).format('HH:mm:ss')}
+          value={this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.format(
+            'HH:mm:ss'
+          )}
         />
         <CloseOutlined
           style={{ cursor: 'pointer', color: 'red' }}

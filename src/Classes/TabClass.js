@@ -5,11 +5,12 @@ import Stroke from 'ol/style/Stroke';
 import * as Moment from 'moment';
 import Style from 'ol/style/Style';
 import { Tile as TileLayer } from 'ol/layer';
-import Control from 'ol/control/Control';
+
 import { defaults } from 'ol/interaction';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import View from 'ol/View';
+import { makeAutoObservable } from 'mobx';
 
 export class Tab {
   constructor(TabObject, OpenTabs) {
@@ -22,24 +23,9 @@ export class Tab {
     }
     switch (TabObject.id) {
       case 'map':
-        this.Component = React.lazy(() => import('../Components/MapComponent'));
-
         this.Options = {
           CheckedTransportKeys: [],
-          LeftMenu: [
-            {
-              Component: React.lazy(() =>
-                import('../Components/IntervalComponent')
-              ),
-              Key: 'Interval',
-            },
-            {
-              Component: React.lazy(() =>
-                import('../Components/TransportTreeComponent')
-              ),
-              Key: 'TransportTree',
-            },
-          ],
+          LeftMenu: ['Interval', 'TransportTree'],
           StartDate:
             Moment().hours() < 20
               ? Moment('08:00:00', 'HH:mm:ss')
@@ -49,6 +35,10 @@ export class Tab {
             Moment().hours() < 20
               ? Moment('20:00:00', 'HH:mm:ss')
               : Moment('08:00:00', 'HH:mm:ss').add(1, 'day'),
+          CurrentTrackPlayerTime:
+            Moment().hours() < 20
+              ? Moment('08:00:00', 'HH:mm:ss')
+              : Moment('20:00:00', 'HH:mm:ss'),
 
           MapObject: new MapObject({
             interactions: defaults({ doubleClickZoom: false }),
@@ -102,6 +92,7 @@ export class Tab {
         );
         break;
     }
+    makeAutoObservable(this);
   }
   GenerateTabKey(TabID, OpenTabs) {
     let TabCount = 0;

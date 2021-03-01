@@ -9,7 +9,20 @@ const { Header, Sider, Content } = Layout;
 const { TabPane } = Tabs;
 import 'antd/dist/antd.css';
 import '../CSS/AppComponent.css';
-
+const ComponentList = [
+  {
+    Component: React.lazy(() => import('../Components/MapComponent')),
+    Key: 'map',
+  },
+  {
+    Component: React.lazy(() => import('../Components/TransportTreeComponent')),
+    Key: 'TransportTree',
+  },
+  {
+    Component: React.lazy(() => import('../Components/IntervalComponent')),
+    Key: 'Interval',
+  },
+];
 @observer
 export default class App extends React.Component {
   constructor(props) {
@@ -21,6 +34,14 @@ export default class App extends React.Component {
       GlobalStore.SetNewTopMenu(Response.menu);
       GlobalStore.SetNewTransportTree(Response.vgps.grps, Response.vgps.vehs);
     });
+  }
+  GetComponent(ComponentID) {
+    const CurrentItem = ComponentList.find((Item) => {
+      if (Item.Key == ComponentID) {
+        return true;
+      }
+    });
+    return <CurrentItem.Component key={ComponentID} />;
   }
   FormatColumns(Columns) {
     return Columns.map((Column, Index) => {
@@ -45,8 +66,8 @@ export default class App extends React.Component {
                   fallback={<Spin tip="Загрузка компонента" size="large" />}
                 >
                   {GlobalStore.CurrentTab != null
-                    ? GlobalStore.CurrentTab.Options.LeftMenu.map((Item) => {
-                        return <Item.Component key={Item.Key} />;
+                    ? GlobalStore.CurrentTab.Options.LeftMenu.map((Key) => {
+                        return this.GetComponent(Key);
                       })
                     : null}
                 </React.Suspense>
@@ -89,7 +110,7 @@ export default class App extends React.Component {
                             <Spin tip="Загрузка компонента" size="large" />
                           }
                         >
-                          {<Tab.Component />}
+                          {this.GetComponent(Tab.Id)}
                         </React.Suspense>
                       </TabPane>
                     );
