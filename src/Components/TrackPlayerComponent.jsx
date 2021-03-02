@@ -19,10 +19,17 @@ export default class TrackPlayerComponent extends React.Component {
         if (this.state.PlayerInterval == null) {
           this.setState({
             PlayerInterval: setInterval(() => {
-              this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(
-                this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix() +
-                  1
-              );
+              if (
+                this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix() !=
+                this.props.ProviderStore.CurrentTab.Options.EndDate.unix()
+              ) {
+                this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(
+                  this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix() +
+                    1
+                );
+              } else {
+                this.PlayerHandler('Pause');
+              }
             }, 10),
           });
         }
