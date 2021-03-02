@@ -9,12 +9,40 @@ import { observer, inject } from 'mobx-react';
 export default class TrackPlayerComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      PlayerInterval: null,
+    };
+  }
+  PlayerHandler(Action) {
+    switch (Action) {
+      case 'Play':
+        if (this.state.PlayerInterval == null) {
+          this.setState({
+            PlayerInterval: setInterval(() => {
+              this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(
+                this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix() +
+                  1
+              );
+            }, 10),
+          });
+        }
+
+        break;
+      case 'Pause':
+        clearInterval(this.state.PlayerInterval);
+        this.setState({ PlayerInterval: null });
+        break;
+    }
   }
   RemoveTrackPlayer = () => {
     this.props.ProviderStore.CurrentTab.Options.MapObject.removeControl(
       this.props.ProviderStore.CurrentTab.Options.MapObject.getControls()
         .array_[1]
+    );
+    clearInterval(this.state.PlayerInterval);
+    this.setState({ PlayerInterval: null });
+    this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(
+      this.props.ProviderStore.CurrentTab.Options.StartDate.unix()
     );
   };
   render() {
@@ -31,10 +59,23 @@ export default class TrackPlayerComponent extends React.Component {
         }}
         className="MatteGlass"
       >
-        <Button size="small" type="primary">
+        <Button
+          size="small"
+          type="primary"
+          onClick={() => {
+            this.PlayerHandler('Play');
+          }}
+        >
           Пуск
         </Button>
-        <Button size="small">Стоп</Button>
+        <Button
+          size="small"
+          onClick={() => {
+            this.PlayerHandler('Pause');
+          }}
+        >
+          Стоп
+        </Button>
         <Slider
           tooltipVisible={false}
           onChange={(NewTime) => {
