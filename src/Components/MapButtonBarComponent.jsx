@@ -8,11 +8,13 @@ import OverlayPositioning from 'ol/OverlayPositioning';
 import Draw from 'ol/interaction/Draw';
 import GeometryType from 'ol/geom/GeometryType';
 import Stroke from 'ol/style/Stroke';
-import { Style } from 'ol/style';
+import { Icon, Style } from 'ol/style';
 import Overlay from 'ol/Overlay';
 import LineString from 'ol/geom/LineString';
 import TrackPlayerComponent from './TrackPlayerComponent';
 import Control from 'ol/control/Control';
+import GeoJSON from 'ol/format/GeoJSON';
+import TruckSVG from '../Svg/Truck.svg';
 
 @inject('ProviderStore')
 @observer
@@ -35,7 +37,27 @@ export default class MapButtonBarComponent extends React.Component {
       this.props.ProviderStore.CurrentTab.GetVectorLayerSource().forEachFeature(
         (Track) => {
           if (/Track/.test(Track.getId())) {
-            //Продолжить тут
+            const Feature = new GeoJSON().readFeature({
+              type: 'Feature',
+              id: `Mark${Track.getId()}`,
+              geometry: {
+                type: 'Point',
+                coordinates: Track.getGeometry().getCoordinateAt(0),
+              },
+            });
+
+            Feature.setStyle(
+              new Style({
+                image: new Icon({
+                  anchor: [0.5, 1],
+                  src: TruckSVG,
+                  scale: [0.25, 0.25],
+                }),
+              })
+            );
+            this.props.ProviderStore.CurrentTab.GetVectorLayerSource().addFeature(
+              Feature
+            );
           }
         }
       );
