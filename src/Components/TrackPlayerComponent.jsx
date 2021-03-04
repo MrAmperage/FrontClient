@@ -51,6 +51,15 @@ export default class TrackPlayerComponent extends React.Component {
     this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(
       this.props.ProviderStore.CurrentTab.Options.StartDate.unix()
     );
+    this.props.ProviderStore.CurrentTab.GetVectorLayerSource().forEachFeature(
+      (Feature) => {
+        if (/MarkTrack/.test(Feature.getId())) {
+          this.props.ProviderStore.CurrentTab.GetVectorLayerSource().removeFeature(
+            Feature
+          );
+        }
+      }
+    );
   };
   render() {
     return (
