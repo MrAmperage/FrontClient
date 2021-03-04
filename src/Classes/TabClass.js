@@ -5,7 +5,6 @@ import Stroke from 'ol/style/Stroke';
 import * as Moment from 'moment';
 import Style from 'ol/style/Style';
 import { Tile as TileLayer } from 'ol/layer';
-
 import { defaults } from 'ol/interaction';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
@@ -64,6 +63,9 @@ export class Tab {
               zoom: 13,
             }),
           }),
+        };
+        this.GetVectorLayerSource = () => {
+          return this.Options.MapObject.getLayers().array_[1].getSource();
         };
         break;
       case 'settings':

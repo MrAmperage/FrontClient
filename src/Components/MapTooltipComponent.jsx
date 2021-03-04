@@ -8,16 +8,16 @@ export default class MapTooltipComponent extends React.Component {
     this.state = {};
   }
   DeleteTooltip = () => {
-    this.props.MapObject.removeOverlay(
-      this.props.MapObject.getOverlayById(this.props.TooltipID)
+    this.props.CurrentTab.Options.MapObject.removeOverlay(
+      this.props.CurrentTab.Options.MapObject.getOverlayById(
+        this.props.TooltipID
+      )
     );
-    this.props.MapObject.getLayers()
-      .array_[1].getSource()
-      .removeFeature(
-        this.props.MapObject.getLayers()
-          .array_[1].getSource()
-          .getFeatureById(this.props.TooltipID)
-      );
+    this.props.CurrentTab.GetVectorLayerSource().removeFeature(
+      this.props.CurrentTab.GetVectorLayerSource().getFeatureById(
+        this.props.TooltipID
+      )
+    );
   };
   render() {
     return (

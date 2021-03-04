@@ -47,9 +47,7 @@ class Store {
                 }),
               })
             );
-            this.CurrentTab.Options.MapObject.getLayers()
-              .array_[1].getSource()
-              .addFeature(NewFeature);
+            this.CurrentTab.GetVectorLayerSource().addFeature(NewFeature);
           }
           resolve();
         }
@@ -58,27 +56,19 @@ class Store {
   };
   DeleteTrack(TransportID) {
     if (
-      this.CurrentTab.Options.MapObject.getLayers()
-        .array_[1].getSource()
-        .getFeatureById(`Track${TransportID}`) != null
+      this.CurrentTab.GetVectorLayerSource().getFeatureById(
+        `Track${TransportID}`
+      ) != null
     ) {
-      this.CurrentTab.Options.MapObject.getLayers()
-        .array_[1].getSource()
-        .removeFeature(
-          this.CurrentTab.Options.MapObject.getLayers()
-            .array_[1].getSource()
-            .getFeatureById(`Track${TransportID}`)
-        );
+      this.CurrentTab.GetVectorLayerSource().removeFeature(
+        this.CurrentTab.GetVectorLayerSource().getFeatureById(
+          `Track${TransportID}`
+        )
+      );
     }
-    if (
-      this.CurrentTab.Options.MapObject.getLayers()
-        .array_[1].getSource()
-        .getFeatures().length != 0
-    ) {
+    if (this.CurrentTab.GetVectorLayerSource().getFeatures().length != 0) {
       this.CurrentTab.Options.MapObject.getView().fit(
-        this.CurrentTab.Options.MapObject.getLayers()
-          .array_[1].getSource()
-          .getExtent()
+        this.CurrentTab.GetVectorLayerSource().getExtent()
       );
     }
   }
@@ -87,15 +77,9 @@ class Store {
       this.DeleteTrack(Key);
       this.AddTrack(Key);
     });
-    if (
-      this.CurrentTab.Options.MapObject.getLayers()
-        .array_[1].getSource()
-        .getFeatures() > 0
-    ) {
+    if (this.CurrentTab.GetVectorLayerSource().getFeatures() > 0) {
       this.CurrentTab.Options.MapObject.getView().fit(
-        this.CurrentTab.Options.MapObject.getLayers()
-          .array_[1].getSource()
-          .getExtent()
+        this.CurrentTab.GetVectorLayerSource().getExtent()
       );
     }
   }
@@ -113,15 +97,9 @@ class Store {
       });
 
       Promise.all(PromiseArray).then(() => {
-        if (
-          this.CurrentTab.Options.MapObject.getLayers()
-            .array_[1].getSource()
-            .getFeatures().length > 0
-        ) {
+        if (this.CurrentTab.GetVectorLayerSource().getFeatures().length > 0) {
           this.CurrentTab.Options.MapObject.getView().fit(
-            this.CurrentTab.Options.MapObject.getLayers()
-              .array_[1].getSource()
-              .getExtent()
+            this.CurrentTab.GetVectorLayerSource().getExtent()
           );
         }
       });
