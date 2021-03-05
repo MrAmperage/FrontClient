@@ -64,6 +64,27 @@ export class Tab {
             }),
           }),
         };
+        this.GetVectorLayer = () => {
+          return this.Options.MapObject.getLayers().array_[1];
+        };
+        this.GetTransportMarks = () => {
+          let TransportMarks = [];
+          this.GetVectorLayerSource().forEachFeature((Feature) => {
+            if (/MarkTrack/.test(Feature.getId())) {
+              TransportMarks.push(Feature);
+            }
+          });
+          return TransportMarks;
+        };
+        this.GetTrackFeaturies = () => {
+          let TrackFeatures = [];
+          this.GetVectorLayerSource().forEachFeature((Feature) => {
+            if (/^Track\d{1,}/.test(Feature.getId())) {
+              TrackFeatures.push(Feature);
+            }
+          });
+          return TrackFeatures;
+        };
         this.GetVectorLayerSource = () => {
           return this.Options.MapObject.getLayers().array_[1].getSource();
         };
