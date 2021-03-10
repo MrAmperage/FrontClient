@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Slider, Button, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { observer, inject } from 'mobx-react';
-import { getVectorContext } from 'ol/render';
 
 @inject('ProviderStore')
 @observer
@@ -13,10 +12,29 @@ export default class TrackPlayerComponent extends React.Component {
       PlayerInterval: null,
     };
   }
+  InitPlayerData() {
+    let PlayerDataMap = new Map();
 
+    this.props.ProviderStore.CurrentTab.GetTrackFeaturies().forEach(
+      (TrackFeature) => {
+        TrackFeature.getGeometry()
+          .getCoordinates()
+          .forEach((Coordinates) => {
+            PlayerDataMap.set(Coordinates[2], {
+              Mark: this.props.ProviderStore.CurrentTab.GetVectorLayerSource().getFeatureById(
+                `Mark${TrackFeature.getId()}`
+              ),
+              Coordinates: Coordinates,
+            });
+          });
+      }
+    );
+    return PlayerDataMap;
+  }
   PlayerHandler(Action) {
     switch (Action) {
       case 'Play':
+        const PlayerData = this.InitPlayerData();
         if (this.state.PlayerInterval == null) {
           this.setState({
             PlayerInterval: setInterval(() => {
@@ -29,24 +47,17 @@ export default class TrackPlayerComponent extends React.Component {
                     1
                 );
               }
-              this.props.ProviderStore.CurrentTab.GetTrackFeaturies().forEach(
-                (Track) => {
-                  Track.getGeometry()
-                    .getCoordinates()
-                    .forEach((Coordinates) => {
-                      if (
-                        Coordinates[2] ==
-                        this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix()
-                      ) {
-                        this.props.ProviderStore.CurrentTab.GetVectorLayerSource()
-                          .getFeatureById(`Mark${Track.getId()}`)
-                          .getGeometry()
-                          .setCoordinates(Coordinates);
-                      }
-                    });
-                }
-              );
-            }, 100),
+              if (
+                PlayerData.has(
+                  this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix()
+                )
+              ) {
+                let Data = PlayerData.get(
+                  this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix()
+                );
+                Data.Mark.getGeometry().setCoordinates(Data.Coordinates);
+              }
+            }, 10),
           });
         }
 
