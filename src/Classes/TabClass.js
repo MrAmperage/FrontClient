@@ -68,22 +68,24 @@ export class Tab {
           return this.Options.MapObject.getLayers().array_[1];
         };
         this.GetTransportMarks = () => {
-          let TransportMarks = [];
-          this.GetVectorLayerSource().forEachFeature((Feature) => {
-            if (/MarkTrack/.test(Feature.getId())) {
-              TransportMarks.push(Feature);
-            }
-          });
-          return TransportMarks;
+          return this.Options.MapObject.getLayers()
+            .array_[1].getSource()
+            .getFeatures()
+            .filter((Feature) => {
+              if (/MarkTrack/.test(Feature.getId())) {
+                return true;
+              }
+            });
         };
         this.GetTrackFeaturies = () => {
-          let TrackFeatures = [];
-          this.GetVectorLayerSource().forEachFeature((Feature) => {
-            if (/^Track\d{1,}/.test(Feature.getId())) {
-              TrackFeatures.push(Feature);
-            }
-          });
-          return TrackFeatures;
+          return this.Options.MapObject.getLayers()
+            .array_[1].getSource()
+            .getFeatures()
+            .filter((Feature) => {
+              if (/^Track\d{1,}/.test(Feature.getId())) {
+                return true;
+              }
+            });
         };
         this.GetVectorLayerSource = () => {
           return this.Options.MapObject.getLayers().array_[1].getSource();

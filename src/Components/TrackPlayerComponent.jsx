@@ -46,7 +46,7 @@ export default class TrackPlayerComponent extends React.Component {
                     });
                 }
               );
-            }, 1000),
+            }, 100),
           });
         }
 
