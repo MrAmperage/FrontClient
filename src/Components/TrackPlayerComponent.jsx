@@ -18,7 +18,6 @@ export default class TrackPlayerComponent extends React.Component {
     switch (Action) {
       case 'Play':
         if (this.state.PlayerInterval == null) {
-          let Index = 0;
           this.setState({
             PlayerInterval: setInterval(() => {
               if (
@@ -29,25 +28,25 @@ export default class TrackPlayerComponent extends React.Component {
                   this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix() +
                     1
                 );
-                if (
-                  Index <
-                  this.props.ProviderStore.CurrentTab.GetTrackFeaturies()[0]
-                    .getGeometry()
-                    .getCoordinates().length
-                ) {
-                  this.props.ProviderStore.CurrentTab.GetTransportMarks()[0]
-                    .getGeometry()
-                    .setCoordinates(
-                      this.props.ProviderStore.CurrentTab.GetTrackFeaturies()[0]
-                        .getGeometry()
-                        .getCoordinates()[Index]
-                    );
-                  Index = Index + 1;
-                }
-              } else {
-                this.PlayerHandler('Pause');
               }
-            }, 10),
+              this.props.ProviderStore.CurrentTab.GetTrackFeaturies().forEach(
+                (Track) => {
+                  Track.getGeometry()
+                    .getCoordinates()
+                    .forEach((Coordinates) => {
+                      if (
+                        Coordinates[2] ==
+                        this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix()
+                      ) {
+                        this.props.ProviderStore.CurrentTab.GetVectorLayerSource()
+                          .getFeatureById(`Mark${Track.getId()}`)
+                          .getGeometry()
+                          .setCoordinates(Coordinates);
+                      }
+                    });
+                }
+              );
+            }, 1000),
           });
         }
 
