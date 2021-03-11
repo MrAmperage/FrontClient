@@ -8,11 +8,14 @@ import { observer, inject } from 'mobx-react';
 export default class TrackPlayerComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.PlayerDataMap = null;
+    this.CurrentTraks = null;
     this.state = {
       PlayerInterval: null,
     };
   }
   InitPlayerData() {
+    this.CurrentTraks = this.props.ProviderStore.CurrentTab.GetTrackFeaturies();
     let PlayerDataMap = new Map();
 
     this.props.ProviderStore.CurrentTab.GetTrackFeaturies().forEach(
@@ -34,7 +37,7 @@ export default class TrackPlayerComponent extends React.Component {
   PlayerHandler(Action) {
     switch (Action) {
       case 'Play':
-        const PlayerData = this.InitPlayerData();
+        this.PlayerDataMap = this.InitPlayerData();
         if (this.state.PlayerInterval == null) {
           this.setState({
             PlayerInterval: setInterval(() => {
@@ -48,11 +51,11 @@ export default class TrackPlayerComponent extends React.Component {
                 );
               }
               if (
-                PlayerData.has(
+                this.PlayerDataMap.has(
                   this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix()
                 )
               ) {
-                let Data = PlayerData.get(
+                let Data = this.PlayerDataMap.get(
                   this.props.ProviderStore.CurrentTab.Options.CurrentTrackPlayerTime.unix()
                 );
                 Data.Mark.getGeometry().setCoordinates(Data.Coordinates);
@@ -66,6 +69,30 @@ export default class TrackPlayerComponent extends React.Component {
         clearInterval(this.state.PlayerInterval);
         this.setState({ PlayerInterval: null });
         break;
+    }
+  }
+  ChangeTransportMarkPosition(NewTime) {
+    if (this.PlayerDataMap != null) {
+      let Data = null;
+      this.CurrentTraks.forEach((Track) => {
+        return Track.getGeometry()
+          .getCoordinates()
+          .reduce((LastResult, Coordinate, Index, Array) => {
+            if (LastResult > Math.abs(NewTime - Coordinate[2])) {
+              if (NewTime > Coordinate[2]) {
+                Data = this.PlayerDataMap.get(
+                  NewTime - (NewTime - Coordinate[2])
+                );
+              } else {
+                Data = this.PlayerDataMap.get(
+                  NewTime + (Coordinate[2] - NewTime)
+                );
+              }
+            }
+          }, Infinity);
+      });
+      this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(NewTime);
+      Data.Mark.getGeometry().setCoordinates(Data.Coordinates);
     }
   }
   RemoveTrackPlayer = () => {
@@ -87,6 +114,7 @@ export default class TrackPlayerComponent extends React.Component {
         }
       }
     );
+    this.PlayerDataMap = null;
   };
   render() {
     return (
@@ -122,7 +150,7 @@ export default class TrackPlayerComponent extends React.Component {
         <Slider
           tooltipVisible={false}
           onChange={(NewTime) => {
-            this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(NewTime);
+            this.ChangeTransportMarkPosition(NewTime);
           }}
           min={this.props.ProviderStore.CurrentTab.Options.StartDate.unix()}
           max={this.props.ProviderStore.CurrentTab.Options.EndDate.unix()}
