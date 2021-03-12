@@ -73,26 +73,29 @@ export default class TrackPlayerComponent extends React.Component {
   }
   ChangeTransportMarkPosition(NewTime) {
     if (this.PlayerDataMap != null) {
-      let Data = null;
-      this.CurrentTraks.forEach((Track) => {
+      let TimeArray = this.CurrentTraks.map((Track) => {
         return Track.getGeometry()
           .getCoordinates()
           .reduce((LastResult, Coordinate, Index, Array) => {
             if (LastResult > Math.abs(NewTime - Coordinate[2])) {
               if (NewTime > Coordinate[2]) {
-                Data = this.PlayerDataMap.get(
-                  NewTime - (NewTime - Coordinate[2])
-                );
+                return NewTime - (NewTime - Coordinate[2]);
               } else {
-                Data = this.PlayerDataMap.get(
-                  NewTime + (Coordinate[2] - NewTime)
-                );
+                return NewTime + (Coordinate[2] - NewTime);
               }
             }
           }, Infinity);
       });
+
       this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(NewTime);
-      Data.Mark.getGeometry().setCoordinates(Data.Coordinates);
+      TimeArray.forEach((Time) => {
+        let TransportData = this.PlayerDataMap.get(Time);
+
+        this.props.ProviderStore.CurrentTab.GetVectorLayerSource()
+          .getFeatureById(TransportData.Mark.getId())
+          .getGeometry()
+          .setCoordinates(TransportData.Coordinates);
+      });
     }
   }
   RemoveTrackPlayer = () => {
