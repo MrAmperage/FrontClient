@@ -90,11 +90,9 @@ export default class TrackPlayerComponent extends React.Component {
       this.props.ProviderStore.SetNewCurrentTimeTrackPlayer(NewTime);
       TimeArray.forEach((Time) => {
         let TransportData = this.PlayerDataMap.get(Time);
-
-        this.props.ProviderStore.CurrentTab.GetVectorLayerSource()
-          .getFeatureById(TransportData.Mark.getId())
-          .getGeometry()
-          .setCoordinates(TransportData.Coordinates);
+        TransportData.Mark.getGeometry().setCoordinates(
+          TransportData.Coordinates
+        );
       });
     }
   }
